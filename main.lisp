@@ -1,0 +1,5 @@
+(load "tictactoe.lisp")
+(load "database.lisp")
+(start-game :game-mode 2 :p1 'X :p2 'O :ai1-mode #'database-play :ai2-mode #'random-play-ai)
+;; (print (database-play '(0 1 2 3 O O X X 8) 'O '(0 1 2 3 4 5 6 7 8)))
+;; (terpri)
