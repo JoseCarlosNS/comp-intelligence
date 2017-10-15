@@ -1,3 +1,5 @@
+(load "board.lisp")
+
 (defvar win-block-plays '())
 (defvar default-plays '())
 
@@ -28,19 +30,6 @@
 ;; "Lista de jogadas padrão, em ordem de maior chance de vitória, caso o jogador não tenha encontrado nenhuma condicional
 ;; para vencer/bloquear uma jogada"
 (setf default-plays '(4 0 2 6 8 1 3 5 7))
-
-(defun meq (&rest arguments)
-    (or (endp arguments)
-        (let ((x))
-            (setf x (first arguments))
-            (every (lambda (y)
-                    (equal x y))
-                (rest arguments)
-            )
-        )
-    )
-)
-
 ;; "Função para usar o database para realizar uma jogada, recebe como parâmetros:
 ;;     b - Tabuleiro para jogar
 ;;     p1 - O jogador que vai realizar a jogada
@@ -56,7 +45,7 @@
                         (return-from database-play index1)
                     )
                 )
-            )            
+            )
         )
     )
     (loop for rule in win-block-plays and index1 from 0 do
