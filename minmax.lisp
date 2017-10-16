@@ -1,5 +1,7 @@
 (load "board.lisp")
 
+(defvar minmax-hash (make-hash-table :test #'equal))
+
 ;; Função de MinMax para o tictactoe que recebe como entrada o estado, o jogador atual e o jogador inimigo
 ;; e retorna o valor da jogada atual
 ;;     Os valores são:
@@ -33,27 +35,29 @@
                 state            
             )        
         )
-        
-        (if (eq p1 winner)
-            1
-            (if (eq opponent winner)
-                -1
-                (if (some #'numberp state)
-                    (progn
-                        (dolist (e state)
-                            (if (numberp e)
-                                (let ((new-state) (state-value))
-                                    (setf new-state (copy-list state))
-                                    (setf (nth e new-state) opponent)
-                                    (setf state-value (- (minmax new-state opponent)))
-                                    (push state-value play-values)
+        (if (gethash (list state p1) minmax-hash)
+            (gethash (list state p1) minmax-hash)
+            (if (eq p1 winner)
+                (setf (gethash (list state p1) minmax-hash) 1)
+                (if (eq opponent winner)
+                    (setf (gethash (list state p1) minmax-hash) -1)
+                    (if (some #'numberp state)
+                        (progn
+                            (dolist (e state)
+                                (if (numberp e)
+                                    (let ((new-state) (state-value))
+                                        (setf new-state (copy-list state))
+                                        (setf (nth e new-state) opponent)
+                                        (setf state-value (- (minmax new-state opponent)))
+                                        (push state-value play-values)
+                                    )
                                 )
-                            )
-                        )                        
-                        (apply #'min play-values)  
-                    )                    
-                    0
-                )   
+                            )                        
+                            (setf (gethash (list state p1) minmax-hash) (apply #'min play-values))                            
+                        )                    
+                        (setf (gethash (list state p1) minmax-hash) 0)
+                    )   
+                )
             )
         )
     )

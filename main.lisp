@@ -1,5 +1,4 @@
 (load "tictactoe.lisp")
-(load "database.lisp")
 (load "minmax.lisp")
 (load "board.lisp")
 
@@ -157,13 +156,13 @@
                         )
                         (let ((result))
                             (setf result (play-itself games p1 p2 ai1 ai2 print-output))
-                            (format t " 
+                            (format t "
                                         Vitórias da IA #1: ~A
                                         Vitórias da IA #2: ~A
                                         Empates: ~A" (first result) (second result) (third result))
                             (terpri)
-                        ) 
-                    )                 
+                        )
+                    )
                     nil
                 )
             )
