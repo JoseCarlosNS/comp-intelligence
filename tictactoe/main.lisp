@@ -23,23 +23,9 @@
             )
         )
         (if (= option 0)
-            (let ((p1) (p2))
-                (format t "Insira a marca do Jogador #1:")
-                (terpri)
-                (setf p1 (read))
-                (format t "Insira a marca do Jogador #2:")
-                (terpri)
-                (setf p2 (read))
-                (start-game :p1 p1 :p2 p2 :print-output t)
-            )
+            (start-game :p1 'x :p2 'o :print-output t)
             (if (= option 1)
-                (let ((p1) (p2) (ai))
-                    (format t "Insira a marca do Jogador #1:")
-                    (terpri)
-                    (setf p1 (read))
-                    (format t "Insira a marca do Jogador #2:")
-                    (terpri)
-                    (setf p2 (read))
+                (let ((ai))
                     (loop
                         (format t "Insira o tipo de IA:
                                     1 - Aleatória
@@ -63,16 +49,10 @@
                             )
                         )
                     )
-                    (start-game :game-mode 1 :p1 p1 :p2 p2 :ai1-mode ai :print-output t)
+                    (start-game :game-mode 1 :p1 'x :p2 'o :ai1-mode ai :print-output t)
                 )
                 (if (= option 2)
-                    (let ((p1) (p2) (ai1) (ai2) (print-output) (games))
-                        (format t "Insira a marca da IA #1:")
-                        (terpri)
-                        (setf p1 (read))
-                        (format t "Insira a marca do IA #2:")
-                        (terpri)
-                        (setf p2 (read))
+                    (let ((ai1) (ai2) (print-output) (games))
                         (loop
                             (format t "Insira o tipo de IA #1:
                                         1 - Aleatória
@@ -155,7 +135,7 @@
                             )
                         )
                         (let ((result))
-                            (setf result (play-itself games p1 p2 ai1 ai2 print-output))
+                            (setf result (play-itself games 'x 'o ai1 ai2 print-output))
                             (format t "
                                         Vitórias da IA #1: ~A
                                         Vitórias da IA #2: ~A

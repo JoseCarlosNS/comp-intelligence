@@ -2,8 +2,7 @@
 
 (defvar minmax-hash (make-hash-table :test #'equal))
 
-;; Função de MinMax para o tictactoe que recebe como entrada o estado, o jogador atual e o jogador inimigo
-;; e retorna o valor da jogada atual
+;; Função de MinMax para o tictactoe que recebe como entrada o estado e o jogador atual
 ;;     Os valores são:
 ;;         1: Jogada ótima
 ;;         -1: Jogada péssima
@@ -11,7 +10,6 @@
 ;;     Parâmetros:
 ;;         state: o estado do tabuleiro
 ;;         p1: a marca do jogador atual, ou seja, aquele que fez a jogada
-;;         p2: a marca do jogador oponente ao atual.
 ;;     Retorna:
 ;;         O valor do estado atual segundo o algoritmo minmax
 (defun minmax (state p1)
