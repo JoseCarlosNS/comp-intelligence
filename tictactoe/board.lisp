@@ -34,7 +34,6 @@
 ;; É preenchido com números que indicam o índice da casa correspondente"
 (defun make-board()
     (let ((board) (index))
-        (setf board '())
         (setf index 8)
         (loop
             (push index board)
@@ -43,8 +42,8 @@
 
 ;; "Retorna uma lista com os índices das casas vazias no tabuleiro bs"
 (defun empty-places (bs)
-    (let ((plays '()))
-        (loop for x in bs do
+    (let ((plays))
+        (dolist (x bs)
             (if (numberp x)
                 (push x plays)))
         plays))
