@@ -38,7 +38,7 @@
 ;;     Retorna:
 ;;         Uma lista contendo os pesos para a solução do problema, na ordem de suas entradas correspondentes.
 ;;         A lista conterá tamanho (num-inputs + 1), caso biasp = t, onde temos o peso adicional do bias, no primeiro índice.
-(defun perceptron-conv (num-inputs biasp input-values desired-responses default-response &optional &key (learning-rate 0.1) (signum-function nil) (max-n 1000))
+(defun perceptron-adapt (num-inputs biasp input-values desired-responses default-response &optional &key (learning-rate 0.1) (signum-function nil) (max-n 1000))
     (let ((weights) (indexes) (num-values))
         (setf weights (make-list (if biasp (+ 1 num-inputs) num-inputs) :initial-element 1))
         (setf num-values (list-length input-values))
@@ -74,7 +74,57 @@
                                             (push wn new-weights)))
                                     (setf weights (reverse new-weights)))))))
                 (when (not has-error)
-                    (return-from perceptron-conv weights)))))
+                    (return weights)))))
+    nil)
+
+;; Dado os parâmetros o algoritmo executa o "Perceptron Convergence Algorithm" e retorna uma lista com os pesos
+;; na ordem das suas respectivas entradas, conforme passado como parâmetro. Vários comandos para imprimir textos no terminal,
+;; para motivos de acompanhamento do algoritmo, foram inseridos ao longo da função, para ativá-los basta 'descomentar'.
+;;     Parâmetros
+;;         -input-num: número de entradas.
+;;         -inputs: e cada elemento contém uma lista de valores possíveis a serem tomados pela entrada 
+;;         correspondente àquele índice. Caso deseje usar o bias, coloque-o como uma
+;;         entrada na lista que contém somente o 1, o que indica uma entrada constante.
+;;         - desired-responses: a lista de saídas desejadas, na ordem das entradas
+;;             Optativos:
+;;         - weights: uma lista contendo os pesos iniciais do algoritmo. Inicialmente todos os pesos são setados em 1 por 
+;;         padrão.
+;;         - learning-rate: parâmetro que define a taxa de aprendizado, deve ser na faixa 0 <= learning-rate <= 1.
+;;         - signum-function: a função limitadora de saídas. Deve receber como parâmetro uma única variável v. Por padrão é
+;;                 +1 -> v > 0
+;;                 -1 -> v <= 0
+;;             Onde v é a combinação linear das entradas*pesos.
+;;         - max-n: o número de repetições máxima para o algoritmo, caso o número de repetições exceda o máximo, a função
+;;         retorna nil. Isto serve para impedir loops infinitos em problemas cujas saídas desejáveis não são linearmente
+;;         separáveis. Por padrão são 1000 repetições máximas
+;;     Retorna:
+;;         Uma lista contendo os pesos para a solução do problema, na ordem de suas entradas correspondentes no parâmetro input.
+;;         O peso do bias é retornado como a primeira entrada, seguida pelos outros pesos.
+(defun perceptron-adapt-base (input-num inputs desired-responses &optional &key (learning-rate 0.1) (signum-function nil) (max-n 1000))
+    (let ((weights) (s-func) (n))
+        (setf weights (make-list input-num :initial-element 1))
+        (if (null signum-function)
+            (setf s-func (lambda (v) (if (<= v 0) -1 1)))
+            (setf s-func signum-function))
+        (dotimes (n max-n) 
+            (let ((has-error))
+                (setf has-error nil)
+                (loop for current-input in inputs and desired-response in desired-responses do
+                    (let ((va) (err) (ya))
+                        (setf va (linear-combiner current-input weights))
+                        (setf ya (funcall s-func va))
+                        (if (not (= ya desired-response))
+                            (progn
+                                (setf has-error t)
+                                (setf err (error-calc va desired-response ya))
+                                (let ((new-weights))
+                                    (loop for wa in weights and xa in current-input do
+                                        (let ((wn))
+                                            (setf wn (weight-adapt wa learning-rate err xa))
+                                            (push wn new-weights)))
+                                    (setf weights (reverse new-weights)))))))
+                (when (not has-error)
+                    (return weights)))))
     nil)
 
 ;; Calcula um novo peso dado os parâmetros passados para a função. O peso é calculado utilizando a fórmula de adaptação
