@@ -1,6 +1,6 @@
 (defstruct perceptron
     weights
-    input-num
+    num-inputs
     signum-function)
 
 
@@ -18,35 +18,57 @@
 ;; Dado os parâmetros o algoritmo executa o "Perceptron Convergence Algorithm" e retorna uma lista com os pesos
 ;; na ordem das suas respectivas entradas, conforme passado como parâmetro.
 ;;     Parâmetros
-;;         -input-num: número de entradas.
+;;         -num-inputs: número de entradas.
+;;         -biasp: t para utilizar o bias, senão nil
+;;         -input-values: os valores que as entradas podem tomar
 ;;         -inputs: A lista onde cada elemento é uma lista de valores de entradas.
-;;         - desired-responses: uma lista onde cada elemento é uma combinação de entradas onde a saída desejada é 1. todas
-;;         as outras combinações de entradas não pertencentes à esta lista terão como saída default-response.
+;;         -desired-responses: uma lista contendo pares (x y), onde:
+;;             x: uma combinação de entradas
+;;             y: a saída desejada, na ocorrência de x
+;;         -default-response: a saída para todas as outras combinações de entradas não presentes em
+;;         desired-responses.
 ;;             Optativos:
 ;;         - learning-rate: parâmetro que define a taxa de aprendizado, deve ser na faixa 0 <= learning-rate <= 1.
+;;         - signum-function: a função de limitação de saída no formato f(x) = y, onde:
+;;             y = -1 -> caso x <= 0
+;;             y = 1 -> caso x > 0
 ;;         - max-n: o número de repetições máxima para o algoritmo, caso o número de repetições exceda o máximo, a função
 ;;         retorna nil. Isto serve para impedir loops infinitos em problemas cujas saídas desejáveis não são linearmente
 ;;         separáveis. Por padrão são 1000 repetições máximas
 ;;     Retorna:
-;;         Uma lista contendo os pesos para a solução do problema, na ordem de suas entradas correspondentes no parâmetro input.
-(defun perceptron-conv (input-num inputs desired-responses &optional &key (learning-rate 0.1) (signum-function nil) (max-n 1000))
-    (let ((weights) (n))
-        (setf weights (make-list input-num :initial-element 1))
+;;         Uma lista contendo os pesos para a solução do problema, na ordem de suas entradas correspondentes.
+;;         A lista conterá tamanho (num-inputs + 1), caso biasp = t, onde temos o peso adicional do bias, no primeiro índice.
+(defun perceptron-conv (num-inputs biasp input-values desired-responses default-response &optional &key (learning-rate 0.1) (signum-function nil) (max-n 1000))
+    (let ((weights) (indexes) (num-values))
+        (setf weights (make-list (if biasp (+ 1 num-inputs) num-inputs) :initial-element 1))
+        (setf num-values (list-length input-values))
+        (setf indexes (make-list num-inputs :initial-element 0))
         (when (not signum-function)
             (setf signum-function (lambda (v) (if (<= v 0) -1 1))))
         (dotimes (n max-n) 
             (let ((has-error))
                 (setf has-error nil)
-                (loop for current-input in inputs and desired-response in desired-responses do
-                    (let ((va) (err) (ya))
-                        (setf va (linear-combiner current-input weights))
+                (loop for x from 1 to (expt num-values num-inputs) do
+                    (let ((input) (new-indexes) (va) (err) (ya) (yd))   
+                        (loop for e in indexes and i from 0 do
+                            (push (nth e input-values) input)
+                            (if (= 0 (rem x (expt num-values i)))
+                                (push (rem (+ 1 e) num-values) new-indexes)
+                                (push e new-indexes)))
+                        (setf indexes (reverse new-indexes))
+                        (when biasp (push 1 input))
+                        (setf va (linear-combiner input weights))
                         (setf ya (funcall signum-function va))
-                        (if (not (= ya desired-response))
+                        (setf yd default-response)
+                        (dolist (e desired-responses)
+                            (when (equal input (first e))
+                                (return (setf yd (second e)))))
+                        (when (not (= ya yd))
                             (progn
                                 (setf has-error t)
-                                (setf err (error-calc va desired-response ya))
+                                (setf err (error-calc va yd ya))
                                 (let ((new-weights))
-                                    (loop for wa in weights and xa in current-input do
+                                    (loop for wa in weights and xa in input do
                                         (let ((wn))
                                             (setf wn (weight-adapt wa learning-rate err xa))
                                             (push wn new-weights)))
