@@ -14,11 +14,7 @@
             (setf x (first arguments))
             (every (lambda (y)
                     (equal x y))
-                (rest arguments)
-            )
-        )
-    )
-)
+                (rest arguments)))))
 
 ;; Verifica se algum jogador já alcançou a vitória no tabuleiro bs.
 ;;         Se sim - Retorna a marca do jogador que venceu
@@ -31,38 +27,26 @@
             (setf index3 (third x))      
             (setf y (nth index1 bs))
             (if (and (not (null y)) (meq y (nth index2 bs) (nth index3 bs)))
-                (return y)
-            )
-        )
-    )
-)
+                (return y)))))
 
 
 ;; "Retorna um tabuleiro de tictactoe vazio. 
 ;; É preenchido com números que indicam o índice da casa correspondente"
 (defun make-board()
     (let ((board) (index))
-        (setf board '())
         (setf index 8)
         (loop
             (push index board)
             (setf index (- index 1))
-            (when (= index -1) (return board))
-        )
-    )
-)
+            (when (= index -1) (return board)))))
 
 ;; "Retorna uma lista com os índices das casas vazias no tabuleiro bs"
 (defun empty-places (bs)
-    (let ((plays '()))
-        (loop for x in bs do
+    (let ((plays))
+        (dolist (x bs)
             (if (numberp x)
-                (push x plays)
-            )
-        )
-        plays
-    )
-)
+                (push x plays)))
+        plays))
 
 ;; "Mostra na saída o tabuleiro"
 (defun print-board (board)
@@ -71,7 +55,4 @@
         (progn
             (format t "~A ~A ~A" (first board) (second board) (third board))
             (terpri)
-            (print-board (nthcdr 3 board))
-        )
-    )
-)
+            (print-board (nthcdr 3 board)))))

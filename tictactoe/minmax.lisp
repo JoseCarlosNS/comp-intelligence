@@ -2,8 +2,7 @@
 
 (defvar minmax-hash (make-hash-table :test #'equal))
 
-;; Função de MinMax para o tictactoe que recebe como entrada o estado, o jogador atual e o jogador inimigo
-;; e retorna o valor da jogada atual
+;; Função de MinMax para o tictactoe que recebe como entrada o estado e o jogador atual
 ;;     Os valores são:
 ;;         1: Jogada ótima
 ;;         -1: Jogada péssima
@@ -11,7 +10,6 @@
 ;;     Parâmetros:
 ;;         state: o estado do tabuleiro
 ;;         p1: a marca do jogador atual, ou seja, aquele que fez a jogada
-;;         p2: a marca do jogador oponente ao atual.
 ;;     Retorna:
 ;;         O valor do estado atual segundo o algoritmo minmax
 (defun minmax (state p1)
@@ -25,16 +23,9 @@
                             (if (and (not (numberp e)) (not (eq e p1)))
                                 (progn
                                     (setf op e)
-                                    (return)
-                                )   
-                            )
-                        )
-                        op                
-                    )
-                )
-                state            
-            )        
-        )
+                                    (return))))
+                        op))
+                state))
         (if (gethash (list state p1) minmax-hash)
             (gethash (list state p1) minmax-hash)
             (if (eq p1 winner)
@@ -49,19 +40,9 @@
                                         (setf new-state (copy-list state))
                                         (setf (nth e new-state) opponent)
                                         (setf state-value (- (minmax new-state opponent)))
-                                        (push state-value play-values)
-                                    )
-                                )
-                            )                        
-                            (setf (gethash (list state p1) minmax-hash) (apply #'min play-values))                            
-                        )                    
-                        (setf (gethash (list state p1) minmax-hash) 0)
-                    )   
-                )
-            )
-        )
-    )
-)
+                                        (push state-value play-values))))                        
+                            (setf (gethash (list state p1) minmax-hash) (apply #'min play-values)))                    
+                        (setf (gethash (list state p1) minmax-hash) 0)))))))
 
 ;; Função que recebe como parâmetro o estado atual, o jogador que fará a próxima jogada e o seu oponente e usando
 ;; o algoritmo do minmax retorna o índice da posição ótima a se jogar.
@@ -78,13 +59,9 @@
                 (setf new-state (copy-list state))
                 (setf (nth e new-state) p1)
                 (setf state-value (minmax new-state p1))
-                (push state-value play-values)
-            )
-        )
+                (push state-value play-values)))
         (setf play-values (reverse play-values))
         (let ((optimal-play))
             (setf optimal-play (position (apply #'max play-values) play-values))
-            (nth optimal-play plays)
-        )        
-    )
-)
+            (nth optimal-play plays))))
+            

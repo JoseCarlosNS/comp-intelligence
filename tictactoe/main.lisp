@@ -18,28 +18,11 @@
                 (return option)
                 (progn
                     (format t "Insira um número válido!~%")
-                    (terpri)
-                )
-            )
-        )
+                    (terpri))))
         (if (= option 0)
-            (let ((p1) (p2))
-                (format t "Insira a marca do Jogador #1:")
-                (terpri)
-                (setf p1 (read))
-                (format t "Insira a marca do Jogador #2:")
-                (terpri)
-                (setf p2 (read))
-                (start-game :p1 p1 :p2 p2 :print-output t)
-            )
+            (start-game :p1 'x :p2 'o :print-output t)
             (if (= option 1)
-                (let ((p1) (p2) (ai))
-                    (format t "Insira a marca do Jogador #1:")
-                    (terpri)
-                    (setf p1 (read))
-                    (format t "Insira a marca do Jogador #2:")
-                    (terpri)
-                    (setf p2 (read))
+                (let ((ai))
                     (loop
                         (format t "Insira o tipo de IA:
                                     1 - Aleatória
@@ -52,27 +35,14 @@
                                     (setf ai #'random-play-ai)
                                     (if (= ai 2)
                                         (setf ai #'minmax-play-ai)
-                                        nil
-                                    )
-                                )
-                                (return ai)
-                            )
+                                        nil))
+                                (return ai))
                             (progn
                                 (format t "Digite um número válido!")
-                                (terpri)
-                            )
-                        )
-                    )
-                    (start-game :game-mode 1 :p1 p1 :p2 p2 :ai1-mode ai :print-output t)
-                )
+                                (terpri))))
+                    (start-game :game-mode 1 :p1 'x :p2 'o :ai1-mode ai :print-output t))
                 (if (= option 2)
-                    (let ((p1) (p2) (ai1) (ai2) (print-output) (games))
-                        (format t "Insira a marca da IA #1:")
-                        (terpri)
-                        (setf p1 (read))
-                        (format t "Insira a marca do IA #2:")
-                        (terpri)
-                        (setf p2 (read))
+                    (let ((ai1) (ai2) (print-output) (games))
                         (loop
                             (format t "Insira o tipo de IA #1:
                                         1 - Aleatória
@@ -85,17 +55,11 @@
                                         (setf ai1 #'random-play-ai)
                                         (if (= ai1 2)
                                             (setf ai1 #'minmax-play-ai)
-                                            nil
-                                        )
-                                    )
-                                    (return ai1)
-                                )
+                                            nil))
+                                    (return ai1))
                                 (progn
                                     (format t "Digite um número válido!")
-                                    (terpri)
-                                )
-                            )
-                        )
+                                    (terpri))))
                         (loop
                             (format t "Insira o tipo de IA #2:
                                         1 - Aleatória
@@ -108,17 +72,11 @@
                                         (setf ai2 #'random-play-ai)
                                         (if (= ai2 2)
                                             (setf ai2 #'minmax-play-ai)
-                                            nil
-                                        )
-                                    )
-                                    (return ai2)
-                                )
+                                            nil))
+                                    (return ai2))
                                 (progn
                                     (format t "Digite um número válido!")
-                                    (terpri)
-                                )
-                            )
-                        )
+                                    (terpri))))
                         (loop
                             (format t "Deseja ver as jogadas das IAs?
                                         Sim - s
@@ -128,20 +86,14 @@
                             (if (equal print-output 's)
                                 (progn
                                     (setf print-output t)
-                                    (return t)
-                                )
+                                    (return t))
                                 (if (equal print-output 'n)
                                     (progn
                                         (setf print-output nil)
-                                        (return t)
-                                    )
+                                        (return t))
                                     (progn
                                         (format t "Digite um valor válido!")
-                                        (terpri)
-                                    )
-                                )
-                            )
-                        )
+                                        (terpri)))))
                         (loop
                             (format t "Quantas vezes deseja que as IAs joguem?")
                             (terpri)
@@ -150,23 +102,13 @@
                                 (return games)
                                 (progn
                                     (format t "Digite um número válido!")
-                                    (terpri)
-                                )
-                            )
-                        )
+                                    (terpri))))
                         (let ((result))
-                            (setf result (play-itself games p1 p2 ai1 ai2 print-output))
+                            (setf result (play-itself games 'x 'o ai1 ai2 print-output))
                             (format t "
                                         Vitórias da IA #1: ~A
                                         Vitórias da IA #2: ~A
                                         Empates: ~A" (first result) (second result) (third result))
-                            (terpri)
-                        )
-                    )
-                    nil
-                )
-            )
-        )
-        (when (= option -1) (return 1))
-    )
-)
+                            (terpri)))
+                    nil)))
+        (when (= option -1) (return 1))))

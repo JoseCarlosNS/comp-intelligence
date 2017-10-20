@@ -1,5 +1,8 @@
-# tictactoe
-Code examples of AI use in TicTacToe
+# Inteligência Computacional
+Exemplos de códigos inteligentes utilizados para resolverem problemas
 
-# How to use
-Execute main.lisp to run the app to play tictactoe
+# Tictactoe
+Execute main.lisp para jogar o Jogo Da Velha
+
+# Perceptron
+Em breve...

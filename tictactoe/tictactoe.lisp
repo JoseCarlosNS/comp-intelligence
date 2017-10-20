@@ -3,23 +3,18 @@
 ;; "O jogador p marca a casa i do tabuleiro b"
 (defun make-play (b p i)
     (if (numberp (nth i b))
-        (setf (nth i b) p)
-    )
-)
+        (setf (nth i b) p)))
 
 ;; "A IA realiza uma jogada utilizando a função function. Caso esta seja nula fica como uma jogada aleatória
 ;; Obs.: A função deve receber 3 parâmetros, o tabuleiro, a marca que representa a IA e 
 ;; a lista de jogadas possíveis"
 (defun ai-play (b p plays &optional (function nil))
     (if (null function)
-        (setf function #'random-play-ai)
-    )    
+        (setf function #'random-play-ai))    
     (let ((index))
         (setf index (funcall function b p plays))
         (make-play b p index)
-        index
-    )
-)
+        index))
 
 ;; "Executa uma jogada aleatória de p no tabuleiro b, em uma das possíveis jogadas plays
 ;; e retorna o índice da casa que foi jogada"
@@ -27,9 +22,7 @@
     (setf *random-state* (make-random-state t))
     (let ((play-index))
         (setf play-index (nth (random (list-length plays)) plays))
-        play-index
-    )
-)
+        play-index))
 
 
 ;; Função que faz duas IAs lutarem contra elas mesmas e conta o número de vitórias de cada uma e os Empates
@@ -56,14 +49,8 @@
                     (setf wins (+ wins 1))
                     (if (equal winner p2)
                         (setf losses (+ losses 1))
-                        (setf draws (+ draws 1))
-                    )
-                )
-            )
-        )
-        (list wins losses draws)
-    )
-)
+                        (setf draws (+ draws 1))))))
+        (list wins losses draws)))
 
 ;; Inicia um jogo de tic-tac-toe
 ;;     Parâmetros
@@ -84,16 +71,14 @@
     (let ((board-temp))
         (if (null board)
             (setf board-temp (make-board))
-            (setf board-temp (copy-list board))
-        )
+            (setf board-temp (copy-list board)))
         (let ((turn-player) (winner) (play-index) (plays) (ai))
             (setf turn-player p1)
             (setf plays (empty-places board-temp))
             (setf ai ai1-mode)
             (loop 
                 (when (eval print-output)
-                    (print-board board-temp)
-                )
+                    (print-board board-temp))
                 (when (or (setf winner (endstatep board-temp)) (= 0 (list-length plays))) 
                     (return 
                         (progn
@@ -101,27 +86,18 @@
                                 (progn
                                     (print-board board-temp)
                                     (format t "~A É O VENCEDOR!" (if winner winner "NINGUÉM"))
-                                    (terpri)
-                                )                            
-                            )
-                            winner
-                        )
-                    )
-                )
+                                    (terpri)))
+                            winner)))
                 (case game-mode
                     (0
                         (progn
                             (when (eval print-output)
                                 (progn
                                     (format t "VEZ DO JOGADOR ~A ~%DIGITE O ÍNDICE DA CASA:" turn-player)
-                                    (terpri)
-                                )
-                            )
+                                    (terpri)))
                             (setf play-index (read))
                             (make-play board-temp turn-player play-index)
-                            (setf plays (remove play-index plays))
-                        )
-                    )
+                            (setf plays (remove play-index plays))))
                     (1
                         (progn
                             (if (eq turn-player p1)
@@ -129,42 +105,24 @@
                                     (when (eval print-output)
                                         (progn
                                             (print "VEZ DO JOGADOR. DIGITE O ÍNDICE DA CASA:")
-                                            (terpri)
-                                        )
-                                    )
+                                            (terpri)))
                                     (setf play-index (read))
                                     (make-play board-temp turn-player play-index) 
-                                    (setf plays (remove play-index plays))
-                                )
+                                    (setf plays (remove play-index plays)))
                                 (progn
                                     (setf play-index (ai-play board-temp turn-player plays ai1-mode))
                                     (when (eval print-output)
                                         (progn
                                             (format t "VEZ DA IA. CASA JOGADA: ~A" play-index)
-                                            (terpri)    
-                                        )    
-                                    )                       
-                                    (setf plays (remove play-index plays))
-                                )
-                            )
-                        )
-                    )
+                                            (terpri)))                       
+                                    (setf plays (remove play-index plays))))))
                     (2
                         (progn
                             (setf play-index (ai-play board-temp turn-player plays ai))
                             (when (eval print-output)
                                 (progn
                                     (format t "VEZ DA IA ~A. CASA JOGADA: ~A" turn-player play-index)
-                                    (terpri)
-                                )
-                            )
+                                    (terpri)))
                             (setf plays (remove play-index plays))
-                            (setf ai (if (eq ai ai1-mode) ai2-mode ai1-mode))
-                        )  
-                    )
-                )
-                (setf turn-player (if (eql turn-player p1) p2 p1))
-            )
-        )
-    )
-)
+                            (setf ai (if (eq ai ai1-mode) ai2-mode ai1-mode)))))
+                (setf turn-player (if (eql turn-player p1) p2 p1))))))
