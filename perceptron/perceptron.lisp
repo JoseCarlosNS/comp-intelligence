@@ -26,89 +26,37 @@
         (if (null weights)
             (progn 
                 (setf new-weights (make-list (list-length inputs) :initial-element 1))
-                (setf (first new-weights) 0)
-            )
-            (setf new-weights weights)
-        )
-        
+                (setf (first new-weights) 0)            )
+            (setf new-weights weights))
         (if (null signum-function)
             (setf s-func (lambda (v) (if (<= v 0) -1 1)))
-            (setf s-func signum-function)
-        )
-
+            (setf s-func signum-function))
         (setf input-comb (input-combinations inputs))
-
         (setf n 0)
         (loop 
             (let ((has-error))
                 (setf has-error nil)
                 (dolist (combination input-comb)
                     (let ((va) (err) (ya) (yd))
-
-                        ;; (print "###############################################################")
-                        ;; (terpri)
-
                         (setf va (linear-combiner combination new-weights))
-                        
-                        ;; (format t "Entradas: ~A ~%Pesos: ~A~%Combinação linear: ~A" combination new-weights va)
-                        ;; (terpri)
-                        
                         (setf ya (funcall s-func va))
-
-                        ;; (format t "Saída: ~A" ya)
-                        ;; (terpri)
-
                         (setf yd default-response)
                         (dolist (e desired-responses)
                             (if (equal combination e)
-                                (return (setf yd (* default-response (- 0 1))))
-                            )
-                        )
-
-                        ;; (format t "Saída esperada: ~A" yd)
-                        ;; (terpri)
-
+                                (return (setf yd (* default-response (- 0 1)))))
                         (if (not (= ya yd))
                             (progn
                                 (setf n (+ n 1))
-
-                                ;; (format t "Erro encontrado em N=~A" n)
-                                ;; (terpri)
-
                                 (setf has-error t)
                                 (setf err (error-calc va yd ya))
-                                
-                                ;; (format t "Erro: ~A" n)
-                                ;; (terpri)
-
                                 (loop for wa in new-weights and xa in combination and index from 0 do
                                     (let ((wn))
-                                        
-                                        ;; (format t "Entrada/Peso Nº~A: ~A ~A" index xa wa)
-                                        ;; (terpri)
-
                                         (setf wn (weight-adapt wa learning-rate err xa))
-                                        
-                                        ;; (format t "Novo peso: ~A" wn)
-                                        ;; (terpri)
-
-                                        (setf (nth index new-weights) wn)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
+                                        (setf (nth index new-weights) wn)))))))
                 (when (not has-error)
-                    (return-from perceptron new-weights)
-                )
+                    (return-from perceptron new-weights))
                 (when (> n max-n)
-                    (return-from perceptron nil)
-                )
-            )
-        )
-    )
-)
+                    (return-from perceptron nil))))))
 
 ;; Calcula um novo peso dado os parâmetros passados para a função. O peso é calculado utilizando a fórmula de adaptação
 ;; de pesos do perceptron.
@@ -120,8 +68,7 @@
 ;;     Retorna:
 ;;         O novo peso calculado.
 (defun weight-adapt (w n e x)
-    (+ w (* n e x))
-)
+    (+ w (* n e x)))
 
 ;; Dado que 'v' é a combinação linear das entradas e pesos, calcula o erro dado o 'v' atual, o 'v' desejado e a saída.
 ;;     Parâmetros
@@ -131,8 +78,7 @@
 ;;     Retorna
 ;;         O valor do erro, que é utilizado para reajustar os pesos
 (defun error-calc (va yd y)
-    (- (- yd va) Y)
-)
+    (- (- yd va) Y))
 
 ;; Função que faz a combinação linear da multiplicação das entradas e seus respectivos pesos.
 ;;     Parâmetros 
@@ -144,11 +90,8 @@
     (let ((combination))
         (setf combination 0)
         (loop for xi in inputs and wi in weights do
-            (setf combination (+ combination (* xi wi)))
-        )
-        combination
-    )
-)
+            (setf combination (+ combination (* xi wi))))
+        combination))
 
 ;; Função que cria uma lista contendo todas as combinações possíveis dado a lista de entradas passada como
 ;; parâmetro
@@ -160,12 +103,10 @@
 (defun input-combinations (inputs)
     (let ((combination-num) (combinations) (change-rate-list) (index-list))
         (setf change-rate-list (make-list (list-length inputs)))
-
         (setf combination-num 1)
         (loop for e in inputs and index from 0 do
             (setf combination-num (* combination-num (list-length e)))
-            (setf (nth index change-rate-list) combination-num)
-        )
+            (setf (nth index change-rate-list) combination-num))
         (setf change-rate-list (reverse change-rate-list))
         (setf index-list (make-list (list-length inputs) :initial-element 0))
         (dotimes (a combination-num)
@@ -176,14 +117,7 @@
                         (setf change-rate (nth b change-rate-list))
                         (setf e2 (nth b index-list))
                         (if (= 0 (rem a change-rate))
-                            (setf (nth b index-list) (rem (+ 1 e2) (list-length e)))
-                        )
-                        (setf (nth b combination) (nth e2 e))
-                    )
-                )
-                (push combination combinations)
-            )
-        )
-        combinations
-    )
-)
+                            (setf (nth b index-list) (rem (+ 1 e2) (list-length e))))
+                        (setf (nth b combination) (nth e2 e))))
+                (push combination combinations)))
+        combinations))
