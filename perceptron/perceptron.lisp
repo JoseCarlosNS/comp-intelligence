@@ -1,6 +1,6 @@
 (defstruct perceptron
     weights
-    num-inputs
+    inputs
     signum-function)
 
 
@@ -18,7 +18,7 @@
 ;; Dado os parâmetros o algoritmo executa o "Perceptron Convergence Algorithm" e retorna uma lista com os pesos
 ;; na ordem das suas respectivas entradas, conforme passado como parâmetro.
 ;;     - inputs: Lista contendo as entradas, é uma lista onde cada elemento é uma outra lista, onde esta última contém 
-;;      entradas. O primeiro input é contado como o bias.
+;;      entradas.
 ;;     - desired-responses: lista contendo, em ordem, as respostas esperadas para cada combinação de entradas
 ;;     contida em inputs.
 ;;          Optativos:
