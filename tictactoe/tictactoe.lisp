@@ -21,7 +21,7 @@
 (defun random-play-ai (b p plays)
     (setf *random-state* (make-random-state t))
     (let ((play-index))
-        (setf play-index (nth (random (list-length plays)) plays))
+        (setf play-index (nth (random (list-length plays) *random-state*) plays))
         play-index))
 
 
