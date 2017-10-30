@@ -32,12 +32,15 @@
 ;;     Retorna:
 ;;         Uma lista contendo os pesos para a solução do problema, na ordem de suas entradas correspondentes no parâmetro input.
 ;;         O peso do bias é retornado como a primeira entrada, seguida pelos outros pesos.
-(defun perceptron-adapt (inputs desired-responses &optional &key (learning-rate 0.1) (signum-function nil) (max-reps 1000))
-    (let ((new-weights) (s-func))
+(defun perceptron-adapt (inputs desired-responses &optional &key (learning-rate 0.1) (signum-function nil) (max-reps 1000) (print-errors nil))
+    (let ((new-weights) (s-func) (file) (err-found))
         (setf new-weights (make-list (list-length (first inputs)) :initial-element 1))
         (if (null signum-function)
             (setf s-func (lambda (v) (if (<= v 0) 0 1)))
             (setf s-func signum-function))
+        (when print-errors
+            (setf file (open print-errors :direction :output :if-exists :supersede)))
+        (setf err-found 0)
         (dotimes (n max-reps) 
             (let ((has-error))
                 (setf has-error nil)
@@ -49,12 +52,16 @@
                             (progn
                                 (setf has-error t)
                                 (setf err (error-calc va yd ya))
+                                (when file
+                                    (format file "~a ~a~%" (incf err-found) err))
                                 (loop for wa in new-weights and xa in current-input and index from 0 do
                                     (let ((wn))
                                         (setf wn (weight-adapt wa learning-rate err xa))
                                         (setf (nth index new-weights) wn)))))))
                 (when (not has-error)
-                    (return new-weights))))))
+                    (progn
+                        (when file (close file))
+                        (return new-weights)))))))
 
 ;; Calcula um novo peso dado os parâmetros passados para a função. O peso é calculado utilizando a fórmula de adaptação
 ;; de pesos do perceptron.
