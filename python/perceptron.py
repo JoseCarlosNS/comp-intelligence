@@ -6,8 +6,14 @@ class Perceptron:
 
     # Construtor, perceba que o peso do bias é o primeiro elemento
     # da lista de pesos
-    def __init__(self, num_entradas, rotulos = '', bias=0):
-        self.pesos = [0] * num_entradas
+    def __init__(self, num_entradas, pesos=[], rotulos = '', bias=0):
+        self.num_entradas = num_entradas
+
+        if pesos:
+            self.pesos = pesos
+        else:
+            self.pesos = [0] * num_entradas
+
         self.bias = bias
         self.rotulos = rotulos
 
@@ -75,5 +81,6 @@ class Perceptron:
     # Função que printa informações sobre o perceptron:
     def print_info(self):
         print("""Informações sobre o perceptron:
+    Rotulos: {}
     Pesos: {}
-    Bias: {}""".format(self.pesos, self.bias))
+    Bias: {}""".format(self.rotulos, self.pesos, self.bias))
