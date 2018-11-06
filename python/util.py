@@ -22,13 +22,29 @@ def gerar_entradas(num_entradas):
     entradas.reverse()
     return entradas
 
+
 # Função que toma os dados de entrada e retorna as entradas com uma dada qtd
 # de entradas alteradas como ruido
 def gerar_ruido(entradas, ruido):
     for entrada in entradas:
-        index = random.randint(0, len(entrada) - 1)
-        if entrada[index] == 0:
-            entrada[index] = 1
-        else:
-            entrada[index] = 0
-    return
+        selecoes = []
+        for x in range(ruido):
+            index = random.randint(0, len(entrada) - 1)
+            while selecoes.__contains__(index):
+                index = random.randint(0, len(entrada) - 1)
+            if entrada[index] == 0:
+                entrada[index] = 1
+            else:
+                entrada[index] = 0
+            selecoes = selecoes + [index]
+    return entradas
+
+
+# Função que testa a acurácia do perceptron dada as entradas e as saídas desejadas
+def testar_perceptron(entradas, saidas_desejadas, perceptron):
+    acuracia = 0
+    for entrada, saida_desejada in zip(entradas, saidas_desejadas):
+        saida = perceptron.computar(entrada)
+        if saida == saida_desejada:
+            acuracia = acuracia + 1
+    return acuracia / len(saidas_desejadas)

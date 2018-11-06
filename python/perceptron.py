@@ -42,7 +42,6 @@ class Perceptron:
     def computar(self, entradas):
         soma = self.somatorio(entradas)
         at = self.ativacao(soma)
-        print("Somatório: {}. Ativação: {}".format(soma, at))
         return at
 
     # Função que calcula o erro do perceptron
@@ -50,18 +49,14 @@ class Perceptron:
         e = saida_desejada - saida_atual
         return e
 
-    # Função de aprendizado
-    # Os dados_treino é uma lista onde cada elemento é um vetor de números que
-    # representam as entradas e o último elemento é a saída desejada
-    def aprender(self, dados_treino, taxa_ap=0.01, max_epoch=1000):
+    # Função que atualiza os pesos do perceptron de acordo com
+    # o algoritmo de aprendizado
+    def aprender(self, entradas, saidas_desejadas, taxa_ap=0.01, max_epoch=1000):
         epoch = 0
-        num_entradas = len(dados_treino[0]) - 1
         while 1:
             errop = 0
-            for x in dados_treino:
-                entradas = x[:num_entradas]
-                saida_desejada = x[num_entradas]
-                soma = self.somatorio(entradas)
+            for entrada, saida_desejada in zip(entradas, saidas_desejadas):
+                soma = self.somatorio(entrada)
                 saida_perceptron = self.ativacao(soma)
                 if saida_desejada != saida_perceptron:
                     errop = 1
@@ -69,7 +64,7 @@ class Perceptron:
                     cont = 0
                     self.bias = self.novo_peso(self.bias, e, taxa_ap, 1)
                     for w in range(len(self.pesos)):
-                        np = self.novo_peso(self.pesos[w], e, taxa_ap, entradas[w])
+                        np = self.novo_peso(self.pesos[w], e, taxa_ap, entrada[w])
                         self.pesos[w] = np
                         cont = cont + 1
                 epoch = epoch + 1
