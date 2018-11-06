@@ -1,5 +1,6 @@
 import perceptron
 
+
 def ler_dataset(nome, separador = ' ', ignore_first_line=False):
     dados = []
     try:
@@ -23,13 +24,13 @@ def salvar_perceptron(nome, perceptron, separador=',', rotulos=''):
         with open(nome, 'wt') as f:
             if rotulos:
                 for rotulo in rotulos:
-                    f.write('{},'.format(rotulo))
+                    f.write(str(rotulo) + separador)
                 f.write('bias\n')
             for peso in perceptron.pesos:
-                f.write("{},".format(peso))
+                f.write(str(peso) + separador)
             f.write(str(perceptron.bias) + '\n')
     except:
-        print('Erro na leitura do arquivo!')
+        print('Erro ao salvar!')
 
     return
 
