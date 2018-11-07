@@ -1,7 +1,8 @@
-import file_io, perceptron, random
+import python.file_io, random
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import random as rd
 
 
 # Função que gera um vetor com 'num_entradas' de valores {0, 1}
@@ -9,7 +10,6 @@ import pandas as pd
 def gerar_entradas(num_entradas):
     entradas = []
     for x in range(2 ** num_entradas):
-        entrada = []
         if x == 0:
             entrada = [0] * num_entradas
         else:
@@ -59,7 +59,6 @@ def print_opcoes():
     print("""Escolha uma das opções abaixo:
         1- Treinar Perceptron
         2- Treinar Multilayer Perceptron (MLP)
-        3- Comparações entre o Perceptron e o MLP
         0- Sair""")
     print('#' * 100)
 
@@ -76,6 +75,12 @@ def input_dados_treinamento():
         rotulos = input('Digite os rótulos das variáveis, separadas por vírgula: ')
         rotulos = rotulos.split(',')
         base_dados = pd.read_csv(nome_arquivo, names=rotulos)
+
+    col_remover = input('Digite colunas que queira remover (opcional): ')
+    if col_remover:
+        col_remover = col_remover.split(',')
+        for col in col_remover:
+            base_dados = base_dados.drop(col, axis=1)
 
     nome_classe = input('Digite o nome da coluna classe: ')
 

@@ -20,21 +20,29 @@ while opcao != '0':
         saida_treino = dados_pp[2]
         saida_teste = dados_pp[3]
 
+        ruido = input('Deseja adicionar ruido? (s/n): ')
+        if ruido == 's':
+            ruido = input('Digite o número de bits de ruido: ')
+            entrada_teste = gerar_ruido(entrada_teste, int(ruido))
+
         if opcao == '1':
             taxa_ap = float(input('Digite a taxa de aprendizado: '))
             max_epoch = int(input('Digite o # máximo de interações: '))
 
-            perceptron = Perceptron(n_iter=max_epoch, eta0=taxa_ap)
-            perceptron.fit(entrada_treino, saida_treino)
+            perc = Perceptron(n_iter=max_epoch, eta0=taxa_ap)
+            perc.fit(entrada_treino, saida_treino)
 
-            predicoes = perceptron.predict(entrada_teste)
+            predicoes = perc.predict(entrada_teste)
         else:
             cam_escond = input('Digite as qtds de neuronios em cada camada: ')
-            cam_escond.split(',')
+            cam_escond = cam_escond.split(',')
             cam_escond_aux = []
             for x in cam_escond:
                 cam_escond_aux = cam_escond_aux + [int(x)]
-                        
+
+            mlp = MLPClassifier(hidden_layer_sizes=cam_escond_aux)
+            mlp.fit(entrada_treino, saida_treino)
+            predicoes = mlp.predict(entrada_teste)
 
         print('Matriz de confusão: ')
         print(confusion_matrix(saida_teste, predicoes))
