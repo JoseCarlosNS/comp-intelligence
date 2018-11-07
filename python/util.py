@@ -1,4 +1,4 @@
-import python.file_io, random
+import file_io, random
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import pandas as pd
