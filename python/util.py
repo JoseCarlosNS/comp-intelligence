@@ -1,6 +1,7 @@
 import file_io, perceptron, random
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+import pandas as pd
 
 
 # Função que gera um vetor com 'num_entradas' de valores {0, 1}
@@ -66,9 +67,18 @@ def print_opcoes():
 # Função responsável pelo input do usuário em relação aos dados de treinamento
 def input_dados_treinamento():
     nome_arquivo = input('Digite o nome do arquivo de base de dados: ')
-    rotulos = input('Digite os rótulos das variáveis, separadas por vírgula: ')
-    rotulos = rotulos.split(',')
-    base_dados = ps.read_csv(nome_arquivo, rotulos)
+    rotulos = ''
+    nome_classe = ''
+    entradas = ''
+    base_dados = ''
+
+    ignorar_linha_1 = input('Rótulos na primeira linha? s ou n')
+    if ignorar_linha_1 == 's':
+        base_dados = pd.read_csv(nome_arquivo)
+    else:
+        rotulos = input('Digite os rótulos das variáveis, separadas por vírgula: ')
+        rotulos = rotulos.split(',')
+        base_dados = pd.read_csv(nome_arquivo, names=rotulos)
 
     nome_classe = input('Digite o nome da coluna classe: ')
 
@@ -82,7 +92,6 @@ def input_dados_treinamento():
 def pre_processamento(entradas, saidas_desejadas, tamanho_base_treino):
     entrada_treino, entrada_teste, saida_treino, saida_teste = train_test_split(entradas, saidas_desejadas,
                                                                                 test_size=tamanho_base_treino)
-
     scaler = StandardScaler()
     scaler.fit(entrada_treino)
 

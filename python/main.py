@@ -2,12 +2,12 @@ from file_io import *
 from util import *
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import Perceptron
-import pandas as pd
+from sklearn.metrics import classification_report, confusion_matrix
 
 opcao = 1
 while opcao != 0:
     print_opcoes()
-    opcao = input()
+    opcao = int(input())
     print(opcao)
     if opcao == 1:
         dados = input_dados_treinamento()
@@ -21,8 +21,15 @@ while opcao != 0:
         saida_treino = dados_pp[2]
         saida_teste = dados_pp[3]
 
-        taxa_ap = input('Digite a taxa de aprendizado: ')
-        max_epoch = input('Digite o # máximo de interações: ')
+        taxa_ap = float(input('Digite a taxa de aprendizado: '))
+        max_epoch = int(input('Digite o # máximo de interações: '))
 
         perceptron = Perceptron(n_iter=max_epoch, eta0=taxa_ap)
         perceptron.fit(entrada_treino, saida_treino)
+
+        predicoes = perceptron.predict(entrada_teste)
+
+        print('Matriz de confusão:')
+        print(confusion_matrix(saida_teste, predicoes))
+        print('Relatório:')
+        print(classification_report(saida_teste, predicoes))
