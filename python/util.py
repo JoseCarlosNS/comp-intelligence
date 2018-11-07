@@ -57,8 +57,8 @@ def testar_perceptron(entradas, saidas_desejadas, perceptron):
 def print_opcoes():
     print('#' * 100)
     print("""Escolha uma das opções abaixo:
-        1- Testes usando Perceptron
-        2- Testes usando Multilayer Perceptron (MLP)
+        1- Treinar Perceptron
+        2- Treinar Multilayer Perceptron (MLP)
         3- Comparações entre o Perceptron e o MLP
         0- Sair""")
     print('#' * 100)
@@ -68,11 +68,8 @@ def print_opcoes():
 def input_dados_treinamento():
     nome_arquivo = input('Digite o nome do arquivo de base de dados: ')
     rotulos = ''
-    nome_classe = ''
-    entradas = ''
-    base_dados = ''
 
-    ignorar_linha_1 = input('Rótulos na primeira linha? s ou n')
+    ignorar_linha_1 = input('Rótulos na primeira linha? (s/n): ')
     if ignorar_linha_1 == 's':
         base_dados = pd.read_csv(nome_arquivo)
     else:
