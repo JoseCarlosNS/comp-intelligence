@@ -3,6 +3,9 @@ from util import *
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import Perceptron
 from sklearn.metrics import classification_report, confusion_matrix
+import warnings
+
+warnings.filterwarnings("ignore")
 
 opcao = '1'
 while opcao != '0':
@@ -36,11 +39,12 @@ while opcao != '0':
         else:
             cam_escond = input('Digite as qtds de neuronios em cada camada: ')
             cam_escond = cam_escond.split(',')
+            max_epoch = int(input('Digite o # máximo de interações: '))
             cam_escond_aux = []
             for x in cam_escond:
                 cam_escond_aux = cam_escond_aux + [int(x)]
 
-            mlp = MLPClassifier(hidden_layer_sizes=cam_escond_aux)
+            mlp = MLPClassifier(hidden_layer_sizes=cam_escond_aux, max_iter=max_epoch)
             mlp.fit(entrada_treino, saida_treino)
             predicoes = mlp.predict(entrada_teste)
 
