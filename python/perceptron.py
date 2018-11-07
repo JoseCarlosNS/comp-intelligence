@@ -1,12 +1,13 @@
 # coding: utf-8
 import file_io
 
+
 class Perceptron:
     'Classe que representa um perceptron'
 
     # Construtor, perceba que o peso do bias é o primeiro elemento
     # da lista de pesos
-    def __init__(self, num_entradas, pesos=[], rotulos = '', bias=0):
+    def __init__(self, num_entradas, pesos=[], rotulos='', bias=0):
         self.num_entradas = num_entradas
 
         if pesos:

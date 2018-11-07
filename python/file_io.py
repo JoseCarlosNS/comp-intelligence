@@ -1,7 +1,7 @@
 import perceptron
 
 
-def ler_dataset(nome, separador = ' ', ignore_first_line=False):
+def ler_dataset(nome, separador=' ', ignore_first_line=False):
     dados = []
     try:
         with open(nome, 'rt') as f:
