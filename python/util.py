@@ -59,6 +59,7 @@ def print_opcoes():
     print("""Escolha uma das opções abaixo:
         1- Treinar Perceptron
         2- Treinar Multilayer Perceptron (MLP)
+        3- Comparar Perceptron com MLP
         0- Sair""")
     print('#' * 100)
 

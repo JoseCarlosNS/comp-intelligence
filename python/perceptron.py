@@ -1,6 +1,3 @@
-# coding: utf-8
-import file_io
-
 
 class Perceptron:
     'Classe que representa um perceptron'
