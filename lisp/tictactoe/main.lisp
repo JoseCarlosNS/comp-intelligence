@@ -8,20 +8,20 @@
         (loop
             (format t "##################################################################
                     Bem vindo ao Jogo da Velha v1.0. Insira sua opção de jogo:
-                        0 - PvP (Player vs Player)
-                        1 - PvC (Player vs Computer)
-                        2 - CvC (Computer vs Computer)
-                       -1 - Sair")
+                        1 - PvP (Player vs Player)
+                        2 - PvC (Player vs Computer)
+                        3 - CvC (Computer vs Computer)
+                        0 - Sair")
             (terpri)
             (setf option (read))
-            (if (and (numberp option) (>= option -1) (<= option 2))
+            (if (and (numberp option) (>= option 0) (<= option 3))
                 (return option)
                 (progn
                     (format t "Insira um número válido!~%")
                     (terpri))))
-        (if (= option 0)
+        (if (= option 1)
             (start-game :p1 'x :p2 'o :print-output t)
-            (if (= option 1)
+            (if (= option 2)
                 (let ((ai))
                     (loop
                         (format t "Insira o tipo de IA:
@@ -41,7 +41,7 @@
                                 (format t "Digite um número válido!")
                                 (terpri))))
                     (start-game :game-mode 1 :p1 'x :p2 'o :ai1-mode ai :print-output t))
-                (if (= option 2)
+                (if (= option 3)
                     (let ((ai1) (ai2) (print-output) (games))
                         (loop
                             (format t "Insira o tipo de IA #1:
@@ -111,4 +111,4 @@
                                         Empates: ~A" (first result) (second result) (third result))
                             (terpri)))
                     nil)))
-        (when (= option -1) (return 1))))
+        (when (= option 0) (return 1))))
